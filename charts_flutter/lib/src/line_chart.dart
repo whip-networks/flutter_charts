@@ -24,15 +24,18 @@ import 'package:charts_common/common.dart' as common
         Series,
         LineRendererConfig,
         SeriesRendererConfig;
-import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
-import 'behaviors/chart_behavior.dart' show ChartBehavior;
+
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
+import 'behaviors/chart_behavior.dart' show ChartBehavior;
+import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
 class LineChart extends CartesianChart<num> {
+  final String? locale;
+
   LineChart(
     List<common.Series<dynamic, num>> seriesList, {
     bool? animate,
@@ -50,6 +53,7 @@ class LineChart extends CartesianChart<num> {
     bool defaultInteractions = true,
     bool? flipVerticalAxis,
     UserManagedState<num>? userManagedState,
+    this.locale,
   }) : super(
           seriesList,
           animate: animate,
@@ -75,10 +79,12 @@ class LineChart extends CartesianChart<num> {
     // configured with them. If no axes were configured, then the chart will
     // use its default types (usually a numeric axis).
     return new common.LineChart(
-        layoutConfig: layoutConfig?.commonLayoutConfig,
-        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+      layoutConfig: layoutConfig?.commonLayoutConfig,
+      primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+      secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+      disjointMeasureAxes: createDisjointMeasureAxes(),
+      locale: locale,
+    );
   }
 
   @override

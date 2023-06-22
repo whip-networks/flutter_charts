@@ -22,18 +22,21 @@ import '../layout/layout_config.dart' show LayoutConfig;
 import '../line/line_renderer.dart' show LineRenderer;
 
 class LineChart extends NumericCartesianChart {
-  LineChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  LineChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    String? locale,
+  }) : super(
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {

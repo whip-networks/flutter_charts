@@ -16,8 +16,7 @@
 import 'dart:collection' show LinkedHashMap;
 
 import '../cartesian/axis/axis.dart' show NumericAxis;
-import '../cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
-    show GridlineRendererSpec;
+import '../cartesian/axis/draw_strategy/gridline_draw_strategy.dart' show GridlineRendererSpec;
 import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
@@ -45,18 +44,21 @@ class ScatterPlotChart extends NumericCartesianChart {
   @override
   bool get selectOverlappingPoints => true;
 
-  ScatterPlotChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  ScatterPlotChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    String? locale,
+  }) : super(
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {
@@ -65,7 +67,7 @@ class ScatterPlotChart extends NumericCartesianChart {
 
   @override
   void initDomainAxis() {
-    domainAxis!.tickDrawStrategy = GridlineRendererSpec<num>()
-        .createDrawStrategy(context, graphicsFactory!);
+    domainAxis!.tickDrawStrategy =
+        GridlineRendererSpec<num>().createDrawStrategy(context, graphicsFactory!);
   }
 }
