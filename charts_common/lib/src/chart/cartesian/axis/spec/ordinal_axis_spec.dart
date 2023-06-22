@@ -13,14 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:charts_common/src/chart/cartesian/axis/scale.dart'
-    show RangeBandConfig;
+import 'package:charts_common/src/chart/cartesian/axis/scale.dart' show RangeBandConfig;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
-import '../auto_adjusting_static_tick_provider.dart'
-    show AutoAdjustingStaticTickProvider;
+import '../auto_adjusting_static_tick_provider.dart' show AutoAdjustingStaticTickProvider;
 import '../axis.dart' show Axis, OrdinalAxis, OrdinalViewport;
 import '../ordinal_scale.dart' show OrdinalScale;
 import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
@@ -28,8 +26,7 @@ import '../range_tick_provider.dart' show RangeTickProvider;
 import '../simple_ordinal_scale.dart' show SimpleOrdinalScale;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show OrdinalTickFormatter;
-import 'axis_spec.dart'
-    show AxisSpec, TickProviderSpec, TickFormatterSpec, ScaleSpec, RenderSpec;
+import 'axis_spec.dart' show AxisSpec, TickProviderSpec, TickFormatterSpec, ScaleSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for ordinal/non-continuous axes typically for bars.
@@ -66,8 +63,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
         );
 
   @override
-  void configure(Axis<String> axis, ChartContext context,
-      GraphicsFactory graphicsFactory) {
+  void configure(Axis<String> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is OrdinalAxis && viewport != null) {
@@ -81,9 +77,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is OrdinalAxisSpec &&
-            viewport == other.viewport &&
-            super == other);
+        (other is OrdinalAxisSpec && viewport == other.viewport && super == other);
   }
 
   @override
@@ -105,8 +99,7 @@ class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   const BasicOrdinalTickProviderSpec();
 
   @override
-  OrdinalTickProvider createTickProvider(ChartContext context) =>
-      OrdinalTickProvider();
+  OrdinalTickProvider createTickProvider(ChartContext context) => OrdinalTickProvider();
 
   @override
   bool operator ==(Object other) => other is BasicOrdinalTickProviderSpec;
@@ -138,24 +131,20 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 /// [TickProviderSpec] that tries different tick increments to avoid tick
 /// collisions.
 @immutable
-class AutoAdjustingStaticOrdinalTickProviderSpec
-    implements OrdinalTickProviderSpec {
+class AutoAdjustingStaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   final List<TickSpec<String>> tickSpecs;
   final List<int> allowedTickIncrements;
 
-  const AutoAdjustingStaticOrdinalTickProviderSpec(
-      this.tickSpecs, this.allowedTickIncrements);
+  const AutoAdjustingStaticOrdinalTickProviderSpec(this.tickSpecs, this.allowedTickIncrements);
 
   @override
-  AutoAdjustingStaticTickProvider<String> createTickProvider(
-          ChartContext context) =>
+  AutoAdjustingStaticTickProvider<String> createTickProvider(ChartContext context) =>
       AutoAdjustingStaticTickProvider<String>(tickSpecs, allowedTickIncrements);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AutoAdjustingStaticOrdinalTickProviderSpec &&
-          tickSpecs == other.tickSpecs);
+      (other is AutoAdjustingStaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;
@@ -185,7 +174,7 @@ class BasicOrdinalTickFormatterSpec implements OrdinalTickFormatterSpec {
   const BasicOrdinalTickFormatterSpec();
 
   @override
-  OrdinalTickFormatter createTickFormatter(ChartContext context) =>
+  OrdinalTickFormatter createTickFormatter(ChartContext context, {String? locale}) =>
       OrdinalTickFormatter();
 
   @override
@@ -219,8 +208,7 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
 
   @override
   OrdinalScale createScale() => SimpleOrdinalScale()
-    ..rangeBandConfig =
-        RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
+    ..rangeBandConfig = RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
@@ -237,8 +225,8 @@ class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
   const FixedPixelOrdinalScaleSpec(this.pixels);
 
   @override
-  OrdinalScale createScale() => SimpleOrdinalScale()
-    ..rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
+  OrdinalScale createScale() =>
+      SimpleOrdinalScale()..rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;

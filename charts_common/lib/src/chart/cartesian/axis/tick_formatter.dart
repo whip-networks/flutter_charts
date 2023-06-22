@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:intl/intl.dart';
+
 import '../../common/datum_details.dart' show MeasureFormatter;
 
 // TODO: Break out into separate files.
@@ -25,16 +26,14 @@ abstract class TickFormatter<D> {
   const TickFormatter();
 
   /// Formats a list of tick values.
-  List<String> format(List<D> tickValues, Map<D, String> cache,
-      {num? stepSize});
+  List<String> format(List<D> tickValues, Map<D, String> cache, {num? stepSize});
 }
 
 abstract class SimpleTickFormatterBase<D> implements TickFormatter<D> {
   const SimpleTickFormatterBase();
 
   @override
-  List<String> format(List<D> tickValues, Map<D, String> cache,
-          {num? stepSize}) =>
+  List<String> format(List<D> tickValues, Map<D, String> cache, {num? stepSize}) =>
       tickValues.map((value) {
         // Try to use the cached formats first.
         var formattedString = cache[value];
@@ -75,8 +74,8 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
   ///
   /// [formatter] optionally specify a formatter to be used. Defaults to using
   /// [NumberFormat.decimalPattern] if none is specified.
-  factory NumericTickFormatter({MeasureFormatter? formatter}) {
-    formatter ??= _getFormatter(NumberFormat.decimalPattern());
+  factory NumericTickFormatter({MeasureFormatter? formatter, String? locale}) {
+    formatter ??= _getFormatter(NumberFormat.decimalPattern(locale));
     return NumericTickFormatter._internal(formatter);
   }
 
@@ -86,9 +85,10 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
   }
 
   /// Constructs a new formatter that uses [NumberFormat.compactCurrency].
-  factory NumericTickFormatter.compactSimpleCurrency() {
-    return NumericTickFormatter._internal(
-        _getFormatter(NumberFormat.compactCurrency()));
+  factory NumericTickFormatter.compactSimpleCurrency(String? locale) {
+    return NumericTickFormatter._internal(_getFormatter(
+      NumberFormat.compactCurrency(locale: locale),
+    ));
   }
 
   /// Returns a [MeasureFormatter] that calls format on [numberFormat].
@@ -100,8 +100,7 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
   String formatValue(num value) => formatter(value);
 
   @override
-  bool operator ==(Object other) =>
-      other is NumericTickFormatter && formatter == other.formatter;
+  bool operator ==(Object other) => other is NumericTickFormatter && formatter == other.formatter;
 
   @override
   int get hashCode => formatter.hashCode;

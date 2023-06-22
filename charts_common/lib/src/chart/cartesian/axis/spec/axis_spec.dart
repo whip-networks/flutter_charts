@@ -57,8 +57,7 @@ class AxisSpec<D> {
     );
   }
 
-  void configure(
-      Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+  void configure(Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     axis.resetDefaultConfiguration();
 
     if (showAxisLine != null) {
@@ -66,8 +65,7 @@ class AxisSpec<D> {
     }
 
     if (renderSpec != null) {
-      axis.tickDrawStrategy =
-          renderSpec!.createDrawStrategy(context, graphicsFactory);
+      axis.tickDrawStrategy = renderSpec!.createDrawStrategy(context, graphicsFactory);
     }
 
     if (tickProviderSpec != null) {
@@ -114,7 +112,7 @@ abstract class TickProviderSpec<D> {
 
 @immutable
 abstract class TickFormatterSpec<D> {
-  TickFormatter<D> createTickFormatter(ChartContext context);
+  TickFormatter<D> createTickFormatter(ChartContext context, {String? locale});
 }
 
 @immutable
@@ -126,8 +124,7 @@ abstract class ScaleSpec<D> {
 abstract class RenderSpec<D> {
   const RenderSpec();
 
-  TickDrawStrategy<D> createDrawStrategy(
-      ChartContext context, GraphicsFactory graphicFactory);
+  TickDrawStrategy<D> createDrawStrategy(ChartContext context, GraphicsFactory graphicFactory);
 }
 
 @immutable
@@ -139,11 +136,7 @@ class TextStyleSpec {
   final String? fontWeight;
 
   const TextStyleSpec(
-      {this.fontFamily,
-      this.fontSize,
-      this.lineHeight,
-      this.color,
-      this.fontWeight});
+      {this.fontFamily, this.fontSize, this.lineHeight, this.color, this.fontWeight});
 
   @override
   bool operator ==(Object other) {
