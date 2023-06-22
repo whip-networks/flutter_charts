@@ -52,12 +52,14 @@ class NumericCartesianChart extends CartesianChart<num> {
     LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
     String? locale,
   }) : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            domainAxis: NumericAxis(locale: locale),
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          domainAxis: NumericAxis(locale: locale),
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @protected
   @override
@@ -68,19 +70,22 @@ class NumericCartesianChart extends CartesianChart<num> {
 }
 
 class OrdinalCartesianChart extends CartesianChart<String> {
-  OrdinalCartesianChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            domainAxis: OrdinalAxis(),
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  OrdinalCartesianChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    String? locale,
+  }) : super(
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          domainAxis: OrdinalAxis(),
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @protected
   @override
@@ -150,18 +155,21 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;
 
-  CartesianChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      Axis<D>? domainAxis,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
-      : vertical = vertical ?? true,
+  final String? locale;
+
+  CartesianChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    Axis<D>? domainAxis,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    this.locale,
+  })  : vertical = vertical ?? true,
         // [domainAxis] will be set to the new axis in [configurationChanged].
         _newDomainAxis = domainAxis,
-        _primaryMeasureAxis = primaryMeasureAxis ?? NumericAxis(),
-        _secondaryMeasureAxis = secondaryMeasureAxis ?? NumericAxis(),
+        _primaryMeasureAxis = primaryMeasureAxis ?? NumericAxis(locale: locale),
+        _secondaryMeasureAxis = secondaryMeasureAxis ?? NumericAxis(locale: locale),
         _disjointMeasureAxes =
             // ignore: prefer_collection_literals
             disjointMeasureAxes ?? LinkedHashMap<String, NumericAxis>(),
@@ -243,7 +251,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       _primaryMeasureAxisSpec = _newPrimaryMeasureAxisSpec;
       removeView(_primaryMeasureAxis);
 
-      _primaryMeasureAxis = _primaryMeasureAxisSpec?.createAxis() ?? NumericAxis();
+      _primaryMeasureAxis = _primaryMeasureAxisSpec?.createAxis() ?? NumericAxis(locale: locale);
 
       _primaryMeasureAxis.tickDrawStrategy =
           GridlineRendererSpec<num>().createDrawStrategy(context, graphicsFactory!);
@@ -257,7 +265,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       _secondaryMeasureAxisSpec = _newSecondaryMeasureAxisSpec;
       removeView(_secondaryMeasureAxis);
 
-      _secondaryMeasureAxis = _secondaryMeasureAxisSpec?.createAxis() ?? NumericAxis();
+      _secondaryMeasureAxis =
+          _secondaryMeasureAxisSpec?.createAxis() ?? NumericAxis(locale: locale);
 
       _secondaryMeasureAxis.tickDrawStrategy =
           GridlineRendererSpec<num>().createDrawStrategy(context, graphicsFactory!);

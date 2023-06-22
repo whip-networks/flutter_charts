@@ -15,11 +15,9 @@
 
 import 'dart:collection' show LinkedHashMap;
 
-import '../../common/date_time_factory.dart'
-    show DateTimeFactory, LocalDateTimeFactory;
+import '../../common/date_time_factory.dart' show DateTimeFactory, LocalDateTimeFactory;
 import '../cartesian/axis/axis.dart' show Axis, NumericAxis;
-import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
-    show SmallTickRendererSpec;
+import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart' show SmallTickRendererSpec;
 import '../cartesian/axis/spec/axis_spec.dart' show AxisSpec;
 import '../cartesian/axis/spec/date_time_axis_spec.dart' show DateTimeAxisSpec;
 import '../cartesian/axis/time/date_time_axis.dart' show DateTimeAxis;
@@ -31,31 +29,33 @@ import '../line/line_renderer.dart' show LineRenderer;
 class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeFactory dateTimeFactory;
 
-  TimeSeriesChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
-      this.dateTimeFactory = const LocalDateTimeFactory()})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            domainAxis: DateTimeAxis(dateTimeFactory),
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  TimeSeriesChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    String? locale,
+    this.dateTimeFactory = const LocalDateTimeFactory(),
+  }) : super(
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          domainAxis: DateTimeAxis(dateTimeFactory),
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @override
   void initDomainAxis() {
-    domainAxis!.tickDrawStrategy = SmallTickRendererSpec<DateTime>()
-        .createDrawStrategy(context, graphicsFactory!);
+    domainAxis!.tickDrawStrategy =
+        SmallTickRendererSpec<DateTime>().createDrawStrategy(context, graphicsFactory!);
   }
 
   @override
   SeriesRenderer<DateTime> makeDefaultRenderer() {
-    return LineRenderer<DateTime>()
-      ..rendererId = SeriesRenderer.defaultRendererId;
+    return LineRenderer<DateTime>()..rendererId = SeriesRenderer.defaultRendererId;
   }
 
   @override

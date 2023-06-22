@@ -20,8 +20,7 @@ import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis, NumericAxis;
 import '../linear/bucketing_numeric_axis.dart' show BucketingNumericAxis;
-import '../linear/bucketing_numeric_tick_provider.dart'
-    show BucketingNumericTickProvider;
+import '../linear/bucketing_numeric_tick_provider.dart' show BucketingNumericTickProvider;
 import '../numeric_extents.dart' show NumericExtents;
 import 'axis_spec.dart' show AxisSpec, RenderSpec;
 import 'numeric_axis_spec.dart'
@@ -65,6 +64,8 @@ class BucketingAxisSpec extends NumericAxisSpec {
   /// [threshold] will not be rendered on the chart.
   final bool showBucket;
 
+  final String? locale;
+
   /// Creates a [NumericAxisSpec] that is specialized for percentage data.
   BucketingAxisSpec({
     RenderSpec<num>? renderSpec,
@@ -73,21 +74,19 @@ class BucketingAxisSpec extends NumericAxisSpec {
     bool? showAxisLine,
     bool? showBucket,
     this.threshold,
+    this.locale,
     NumericExtents? viewport,
   })  : showBucket = showBucket ?? true,
         super(
             renderSpec: renderSpec,
-            tickProviderSpec:
-                tickProviderSpec ?? const BucketingNumericTickProviderSpec(),
+            tickProviderSpec: tickProviderSpec ?? const BucketingNumericTickProviderSpec(),
             tickFormatterSpec: tickFormatterSpec ??
-                BasicNumericTickFormatterSpec.fromNumberFormat(
-                    NumberFormat.percentPattern()),
+                BasicNumericTickFormatterSpec.fromNumberFormat(NumberFormat.percentPattern()),
             showAxisLine: showAxisLine,
             viewport: viewport ?? const NumericExtents(0.0, 1.0));
 
   @override
-  void configure(
-      Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+  void configure(Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is NumericAxis && viewport != null) {
@@ -104,7 +103,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
   }
 
   @override
-  BucketingNumericAxis createAxis() => BucketingNumericAxis();
+  BucketingNumericAxis createAxis() => BucketingNumericAxis(locale);
 
   @override
   bool operator ==(Object other) =>
@@ -159,9 +158,7 @@ class BucketingNumericTickProviderSpec extends BasicNumericTickProviderSpec {
       ..zeroBound = zeroBound!
       ..dataIsInWholeNumbers = dataIsInWholeNumbers!;
 
-    if (desiredMinTickCount != null ||
-        desiredMaxTickCount != null ||
-        desiredTickCount != null) {
+    if (desiredMinTickCount != null || desiredMaxTickCount != null || desiredTickCount != null) {
       provider.setTickCount(desiredMaxTickCount ?? desiredTickCount ?? 10,
           desiredMinTickCount ?? desiredTickCount ?? 2);
     }
