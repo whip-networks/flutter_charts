@@ -22,18 +22,23 @@ import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 
 class BarChart extends OrdinalCartesianChart {
-  BarChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  final String? locale;
+
+  BarChart({
+    bool? vertical,
+    LayoutConfig? layoutConfig,
+    NumericAxis? primaryMeasureAxis,
+    NumericAxis? secondaryMeasureAxis,
+    LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+    this.locale,
+  }) : super(
+          vertical: vertical,
+          layoutConfig: layoutConfig,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
+          locale: locale,
+        );
 
   @override
   SeriesRenderer<String> makeDefaultRenderer() {
