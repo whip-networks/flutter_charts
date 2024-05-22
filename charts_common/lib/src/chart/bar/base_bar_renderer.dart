@@ -22,16 +22,14 @@ import 'package:meta/meta.dart' show protected;
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show clamp;
 import '../../data/series.dart' show AttributeKey;
-import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
+import '../cartesian/axis/axis.dart' show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/axis/scale.dart' show RangeBandConfig;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'base_bar_renderer_config.dart' show BaseBarRendererConfig;
-import 'base_bar_renderer_element.dart'
-    show BaseAnimatedBar, BaseBarRendererElement;
+import 'base_bar_renderer_element.dart' show BaseAnimatedBar, BaseBarRendererElement;
 
 const barGroupIndexKey = AttributeKey<int>('BarRenderer.barGroupIndex');
 
@@ -39,16 +37,13 @@ const barGroupCountKey = AttributeKey<int>('BarRenderer.barGroupCount');
 
 const barGroupWeightKey = AttributeKey<double>('BarRenderer.barGroupWeight');
 
-const previousBarGroupWeightKey =
-    AttributeKey<double>('BarRenderer.previousBarGroupWeight');
+const previousBarGroupWeightKey = AttributeKey<double>('BarRenderer.previousBarGroupWeight');
 
-const allBarGroupWeightsKey =
-    AttributeKey<List<double>>('BarRenderer.allBarGroupWeights');
+const allBarGroupWeightsKey = AttributeKey<List<double>>('BarRenderer.allBarGroupWeights');
 
 const stackKeyKey = AttributeKey<String>('BarRenderer.stackKey');
 
-const barElementsKey =
-    AttributeKey<List<BaseBarRendererElement>>('BarRenderer.elements');
+const barElementsKey = AttributeKey<List<BaseBarRendererElement>>('BarRenderer.elements');
 
 /// Base class for bar renderers that implements common stacking and grouping
 /// logic.
@@ -69,8 +64,8 @@ const barElementsKey =
 ///   offsets overlap. Note that bars for each series will be rendered in order,
 ///   such that bars from the last series will be "on top" of bars from previous
 ///   series.
-abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
-    B extends BaseAnimatedBar<D, R>> extends BaseCartesianRenderer<D> {
+abstract class BaseBarRenderer<D, R extends BaseBarRendererElement, B extends BaseAnimatedBar<D, R>>
+    extends BaseCartesianRenderer<D> {
   // `config` can't be a `BaseBarRendererConfig<D>` because `BarLaneRenderer<D>`
   // passes a `BarLaneRendererConfig`, but `BarLaneRendererConfig` is a
   // `BarRendererConfig<String>`.
@@ -108,10 +103,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   /// Optimization for getNearest to avoid scanning all data if possible.
   ImmutableAxis<D>? _prevDomainAxis;
 
-  BaseBarRenderer(
-      {required this.config,
-      required String rendererId,
-      required int layoutPaintOrder})
+  BaseBarRenderer({required this.config, required String rendererId, required int layoutPaintOrder})
       : super(
           rendererId: rendererId,
           layoutPaintOrder: layoutPaintOrder,
@@ -138,10 +130,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     // Maps used to store the final measure offset of the previous series, for
     // each domain value.
-    final posDomainToStackKeyToDetailsMap =
-        <D, Map<String, BaseBarRendererElement>>{};
-    final negDomainToStackKeyToDetailsMap =
-        <D, Map<String, BaseBarRendererElement>>{};
+    final posDomainToStackKeyToDetailsMap = <D, Map<String, BaseBarRendererElement>>{};
+    final negDomainToStackKeyToDetailsMap = <D, Map<String, BaseBarRendererElement>>{};
     final categoryToIndexMap = <String, int>{};
 
     // Keep track of the largest bar stack size. This should be 1 for grouped
@@ -233,8 +223,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
           if (prevDetail != null) {
             measureOffset += prevDetail.measureOffsetPlusMeasure!;
 
-            details.cumulativeTotal =
-                details.cumulativeTotal! + prevDetail.cumulativeTotal!;
+            details.cumulativeTotal = details.cumulativeTotal! + prevDetail.cumulativeTotal!;
           }
 
           // And overwrite the details measure offset.
@@ -297,9 +286,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             ? barWeights.getRange(barGroupIndex + 1, numBarGroups)
             : barWeights.getRange(0, barGroupIndex);
 
-        final previousBarWeight = previousBarWeights.isNotEmpty
-            ? previousBarWeights.reduce((a, b) => a + b)
-            : 0.0;
+        final previousBarWeight =
+            previousBarWeights.isNotEmpty ? previousBarWeights.reduce((a, b) => a + b) : 0.0;
 
         series.setAttr(barGroupWeightKey, barWeight);
         series.setAttr(previousBarGroupWeightKey, previousBarWeight);
@@ -422,8 +410,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         var barStackList = _barStackMap.putIfAbsent(barStackMapKey, () => []);
 
         // If we already have an AnimatingBarfor that index, use it.
-        var animatingBar =
-            barStackList.firstWhereOrNull((B bar) => bar.key == barKey);
+        var animatingBar = barStackList.firstWhereOrNull((B bar) => bar.key == barKey);
 
         // If we don't have any existing bar element, create a new bar and have
         // it animate in from the domain axis.
@@ -476,9 +463,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
         // Store off stack keys for each bar group to help getNearest identify
         // groups of stacks.
-        _currentGroupsStackKeys
-            .putIfAbsent(domainValue, () => <String>{})
-            .add(barStackMapKey);
+        _currentGroupsStackKeys.putIfAbsent(domainValue, () => <String>{}).add(barStackMapKey);
 
         // Get the barElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
@@ -580,8 +565,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       final keysToRemove = HashSet<String>();
 
       _barStackMap.forEach((String key, List<B> barStackList) {
-        barStackList.retainWhere(
-            (B bar) => !bar.animatingOut && !bar.targetBar!.measureIsNull!);
+        barStackList.retainWhere((B bar) => !bar.animatingOut && !bar.targetBar!.measureIsNull!);
 
         if (barStackList.isEmpty) {
           keysToRemove.add(key);
@@ -603,9 +587,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       // Turn this into a list so that the getCurrentBar isn't called more than
       // once for each animationPercent if the barElements are iterated more
       // than once.
-      final barElements = barStack
-          .map((B animatingBar) => animatingBar.getCurrentBar(animationPercent))
-          .toList();
+      final barElements =
+          barStack.map((B animatingBar) => animatingBar.getCurrentBar(animationPercent)).toList();
 
       if (barElements.isNotEmpty) {
         paintBar(canvas, animationPercent, barElements);
@@ -615,8 +598,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   /// Paints a stack of bar elements on the canvas.
   @protected
-  void paintBar(
-      ChartCanvas canvas, double animationPercent, Iterable<R> barElements);
+  void paintBar(ChartCanvas canvas, double animationPercent, Iterable<R> barElements);
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
@@ -634,8 +616,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     }
 
     if (_prevDomainAxis is OrdinalAxis) {
-      final domainValue = _prevDomainAxis!
-          .getDomain(renderingVertically ? chartPoint.x : chartPoint.y);
+      final domainValue =
+          _prevDomainAxis!.getDomain(renderingVertically ? chartPoint.x : chartPoint.y);
 
       // If we have a domainValue for the event point, then find all segments
       // that match it.
@@ -643,8 +625,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         if (renderingVertically) {
           nearest = _getVerticalDetailsForDomainValue(domainValue, chartPoint);
         } else {
-          nearest =
-              _getHorizontalDetailsForDomainValue(domainValue, chartPoint);
+          nearest = _getHorizontalDetailsForDomainValue(domainValue, chartPoint);
         }
       }
     } else {
@@ -701,8 +682,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     // we can't use the optimized comparison for [OrdinalAxis].
     final stackKeys = (domainValue != null)
         ? _currentGroupsStackKeys[domainValue]
-        : _currentGroupsStackKeys.values
-            .reduce((allKeys, keys) => allKeys..addAll(keys));
+        : _currentGroupsStackKeys.values.reduce((allKeys, keys) => allKeys..addAll(keys));
     stackKeys?.forEach((String stackKey) {
       if (where != null) {
         matchingSegments.addAll(_barStackMap[stackKey]!.where(where));
@@ -782,8 +762,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   ///
   /// All other types, use the in order iterator.
   @protected
-  Iterable<S> getOrderedSeriesList<S extends ImmutableSeries<D>>(
-      List<S> seriesList) {
+  Iterable<S> getOrderedSeriesList<S extends ImmutableSeries<D>>(List<S> seriesList) {
     return (renderingVertically && config.stacked)
         ? config.grouped
             ? _ReversedSeriesIterable(seriesList)
@@ -795,8 +774,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 }
 
 /// Iterable wrapping the seriesList that returns the ReversedSeriesItertor.
-class _ReversedSeriesIterable<S extends ImmutableSeries<Object?>>
-    extends Iterable<S> {
+class _ReversedSeriesIterable<S extends ImmutableSeries<Object?>> extends Iterable<S> {
   final List<S> seriesList;
 
   _ReversedSeriesIterable(this.seriesList);
@@ -810,8 +788,7 @@ class _ReversedSeriesIterable<S extends ImmutableSeries<Object?>>
 /// This is needed because for grouped stacked bars, the category stays in the
 /// order it was passed in for the grouping, but the series is flipped so that
 /// the first series of that category is on the top of the stack.
-class _ReversedSeriesIterator<S extends ImmutableSeries<Object?>>
-    extends Iterator<S> {
+class _ReversedSeriesIterator<S extends ImmutableSeries<Object?>> implements Iterator<S> {
   final List<S> _list;
   final _visitIndex = <int>[];
   int? _current;
@@ -821,14 +798,11 @@ class _ReversedSeriesIterator<S extends ImmutableSeries<Object?>>
     // with the same category.
     final categoryAndSeriesIndexMap = <String?, List<int>>{};
     for (var i = 0; i < list.length; i++) {
-      categoryAndSeriesIndexMap
-          .putIfAbsent(list[i].seriesCategory, () => <int>[])
-          .add(i);
+      categoryAndSeriesIndexMap.putIfAbsent(list[i].seriesCategory, () => <int>[]).add(i);
     }
 
     // Creates a visit that is categories in order, but the series is reversed.
-    categoryAndSeriesIndexMap
-        .forEach((_, indices) => _visitIndex.addAll(indices.reversed));
+    categoryAndSeriesIndexMap.forEach((_, indices) => _visitIndex.addAll(indices.reversed));
   }
 
   @override
