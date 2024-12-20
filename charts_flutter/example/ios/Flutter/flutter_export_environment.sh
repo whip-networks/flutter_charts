@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/yefrederic/fvm/versions/3.22.0"
+export "FLUTTER_ROOT=/Users/yefrederic/fvm/versions/3.27.1"
 export "FLUTTER_APPLICATION_PATH=/Users/yefrederic/TVShowTime/flutter_charts/charts_flutter/example"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
